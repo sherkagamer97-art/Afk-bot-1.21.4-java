@@ -1,5 +1,18 @@
 const mineflayer = require('mineflayer');
+const http = require('http');
 
+// Render port talab qilgani uchun oddiy server ochamiz
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Bot ishlayapti!\n');
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Veb server ${PORT} portda ishga tushdi.`);
+});
+
+// Minecraft bot qismi
 const bot = mineflayer.createBot({
   host: 'sherzod.aternos.me',
   port: 62297,
