@@ -1,7 +1,7 @@
 const mineflayer = require('mineflayer');
 const http = require('http');
 
-// Render port talab qilgani uchun oddiy server ochamiz
+// Render uchun veb-server
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('Bot ishlayapti!\n');
@@ -13,6 +13,8 @@ server.listen(PORT, () => {
 });
 
 // Minecraft bot qismi
+console.log("Bot serverga ulanishga tayyorlanmoqda...");
+
 const bot = mineflayer.createBot({
   host: 'sherzod.aternos.me',
   port: 62297,
@@ -20,10 +22,13 @@ const bot = mineflayer.createBot({
   username: 'inmi_afkbot'
 });
 
+bot.on('connect', () => {
+  console.log("Serverga ulanish hosil qilindi...");
+});
+
 bot.on('spawn', () => {
   console.log("Bot serverga muvaffaqiyatli kirdi va ishga tushdi!");
   
-  // Har 3 sekundda sakrab turish
   setInterval(() => {
     bot.setControlState('jump', true);
     setTimeout(() => {
@@ -32,8 +37,12 @@ bot.on('spawn', () => {
   }, 3000);
 });
 
-bot.on('end', () => {
-  console.log("Bot serverdan uzildi, qayta ulanishga harakat qilinmoqda...");
+bot.on('kicked', (reason) => {
+  console.log("Bot serverdan haydaldi, sababi: ", reason);
+});
+
+bot.on('end', (reason) => {
+  console.log("Bot serverdan uzildi, sababi: ", reason);
   setTimeout(() => {
     process.exit(1);
   }, 5000);
